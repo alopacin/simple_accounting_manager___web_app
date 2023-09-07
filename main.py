@@ -4,21 +4,6 @@ import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    title = 'Strona główna'
-    context = {
-        'title': title,
-
-    }
-    return render_template('index.html', context=context)
-
-
-@app.route("/historia")
-def history():
-    title = 'Historia'
-    return render_template('historia.html', title=title)
-
 
 # zainicjowanie klasy manager
 class Manager:
@@ -191,3 +176,27 @@ def show_action_history(manager):
             break
 
 
+@app.route("/")
+def home():
+    title = 'Strona główna'
+    context = {
+        'title': title,
+        'show_balance': show_account_balance,
+        'list': show_list_of_products,
+        'purchase': to_purchase,
+        'sale': to_sale,
+        'balance_request': balance_request,
+        'load': manager.load_data()
+    }
+    return render_template('index.html', context=context)
+
+
+@app.route("/historia")
+def history():
+    title = 'Historia'
+    context = {
+        'title' : title,
+        'history': show_action_history,
+        'load': manager.load_data()
+    }
+    return render_template('historia.html', context=context)
