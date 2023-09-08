@@ -1,9 +1,5 @@
-from flask import Flask, render_template, request
 import json
 import os
-
-app = Flask(__name__)
-
 
 # zainicjowanie klasy manager
 class Manager:
@@ -176,36 +172,3 @@ def show_action_history(manager):
             break
 
 
-@app.route("/", methods=['POST', 'GET'])
-def home():
-    manager.load_data()
-    title = 'Strona główna'
-
-    nazwa_produktu = request.form.get("nazwa_kupno")
-    cena_produktu = request.form.get("cena_kupno")
-    liczba_sztuk = request.form.get("liczba_kupno")
-
-
-    print(request.form)
-
-    context = {
-        'title': title,
-        'show_balance': show_account_balance,
-        'list': show_list_of_products,
-        'purchase': to_purchase,
-        'sale': to_sale,
-        'balance_request': balance_request,
-        'load': manager.load_data()
-    }
-    return render_template('index.html', context=context)
-
-
-@app.route("/historia")
-def history():
-    title = 'Historia'
-    context = {
-        'title' : title,
-        'history': show_action_history,
-        'load': manager.load_data()
-    }
-    return render_template('historia.html', context=context)

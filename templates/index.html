@@ -17,31 +17,45 @@
 
     <div class="container mt-5 mb-5">
     <h3>Stan konta : {{ context.show_balance }}</h3>
-    <h3>Stan magazynu: {{ context.list }} </h3>
+    <h3>Stan magazynu : {{ context.list }} </h3>
     </div>
 
     <div class="container">
-        <div class="container mt-3">
+        <div class="container mt-3 mb-3">
             <h4>Zakup: </h4>
             <form action="/" method="POST">
-            <input type="text" placeholder="Wpisz produkt" name="nazwa_kupno">
-            <input type="number" placeholder="Podaj cenę" name="cena_kupno" >
-                <input type="number" placeholder="Podaj liczbę sztuk" name="liczba_kupno">
-            <button type="submit">Wyślij</button>
+                <input type="text" placeholder="Wpisz produkt" name="nazwa_kupno">
+                <input type="number" placeholder="Podaj cenę kupna" name="cena_kupno" >
+                <input type="number" placeholder="Podaj liczbę kupionych sztuk" name="liczba_kupno">
+                <button type="submit">Wyślij</button>
             </form>
         </div>
 
-        <div class="container mt-3">
+        <div class="container mt-4 mb-4">
             <h4>Sprzedaż:</h4>
             <form action="/" method="POST">
-                    <input type="text" placeholder="Wpisz produkt" id="sprzedaz_produktu" name="nazwa_sprzedaz">
+                <input type="text" placeholder="Wpisz produkt" name="nazwa_sprzedaz">
+                <input type="number" placeholder="Podaj cenę sprzedaży" name="cena_sprzedaz">
+                <input type="number" placeholder="Podaj liczbę sprzedanych sztuk" name="liczba_sprzedaz">
+                <button type="submit">Wyślij</button>
             </form>
         </div>
 
-      <div class="container mt-3">
-        <h4>Zmiana salda</h4>
+      <div class="container mt-4 mb-4">
+        <h4>Zmiana salda: </h4>
+          <form action="/" method="POST">
+             <label class="input-group-text" for="inputGroupSelect01"></label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>Wybierz</option>
+                <option value="1">Dodaj do konta</option>
+                <option value="2">Odejmij z konta</option>
+            </select>
+                <input type="number" placeholder="Podaj kwotę" name="kwota">
+                <button type="submit">Wyślij</button>
+          </form>
       </div>
-  </div>
+
+    </div>
   </div>
 
 
