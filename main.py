@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import json
 import os
 
@@ -176,9 +176,18 @@ def show_action_history(manager):
             break
 
 
-@app.route("/")
+@app.route("/", methods=['POST', 'GET'])
 def home():
+    manager.load_data()
     title = 'Strona główna'
+
+    nazwa_produktu = request.form.get("nazwa_kupno")
+    cena_produktu = request.form.get("cena_kupno")
+    liczba_sztuk = request.form.get("liczba_kupno")
+
+
+    print(request.form)
+
     context = {
         'title': title,
         'show_balance': show_account_balance,

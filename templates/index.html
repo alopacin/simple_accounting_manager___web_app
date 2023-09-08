@@ -9,30 +9,38 @@
 
   <body>
   <div class="container mt-3">
-    <h2>Magazyn</h2>
-    <div class="mt-3">
+    <h1>Magazyn</h1>
+    <div class="mt-3 mb-3">
         <a href="/" class="btn btn-primary" >Strona główna</a>
         <a href="/historia" class="btn btn-primary">Historia</a>
     </div>
 
-    <div>
-    <p>Stan konta : {{ context.show_balance }}</p>
-    <p>Stan magazynu: {{ context.list }} </p>
+    <div class="container mt-5 mb-5">
+    <h3>Stan konta : {{ context.show_balance }}</h3>
+    <h3>Stan magazynu: {{ context.list }} </h3>
     </div>
 
-    <div>
-        <div class="container">
-      <p>Zakup: </p>
-        <form>
-            <label>Produkt</label>
-            <input type="text" placeholder="Wpisz produkt" id="Produkt">
-            <input type="number" placeholder="Podaj ilość">
+    <div class="container">
+        <div class="container mt-3">
+            <h4>Zakup: </h4>
+            <form action="/" method="POST">
+            <input type="text" placeholder="Wpisz produkt" name="nazwa_kupno">
+            <input type="number" placeholder="Podaj cenę" name="cena_kupno" >
+                <input type="number" placeholder="Podaj liczbę sztuk" name="liczba_kupno">
             <button type="submit">Wyślij</button>
-        </form>
-
+            </form>
         </div>
-      <p>Sprzedaż</p>
-      <p>Zmiana salda</p>
+
+        <div class="container mt-3">
+            <h4>Sprzedaż:</h4>
+            <form action="/" method="POST">
+                    <input type="text" placeholder="Wpisz produkt" id="sprzedaz_produktu" name="nazwa_sprzedaz">
+            </form>
+        </div>
+
+      <div class="container mt-3">
+        <h4>Zmiana salda</h4>
+      </div>
   </div>
   </div>
 
