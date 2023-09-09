@@ -18,9 +18,9 @@ class Manager:
             try:
                 with open(self.filename, 'r') as f:
                     data = json.load(f)
-                    self.stan_konta = data.get('stan_konta', 0)
-                    self.stan_magazynu = data.get('stan_magazynu', {})
-                    self.historia_akcji = data.get('historia_akcji', [])
+                    self.stan_konta = data.get('stan_konta')
+                    self.stan_magazynu = data.get('stan_magazynu')
+                    self.historia_akcji = data.get('historia_akcji')
             except json.JSONDecodeError:
                 self.save_to_file()
 
@@ -28,8 +28,8 @@ class Manager:
     def save_to_file(self):
         data = {
             'stan_konta': self.stan_konta,
-            'stan_magazynu' : self.stan_magazynu,
-            'historia_akcji' : self.historia_akcji
+            'stan_magazynu': self.stan_magazynu,
+            'historia_akcji': self.historia_akcji
         }
         with open(self.filename, 'w') as f:
             json.dump(data, f)
@@ -50,8 +50,6 @@ def balance_request(number=1, saldo=0):
         manager.stan_konta -= saldo
         akcja = f'Odjęto {saldo} $ z konta'
         manager.historia_akcji.append(akcja)
-    else:
-        return None
 
 
 # funkcja odpowiadajaca za sprzedaz z magazynu
@@ -60,26 +58,24 @@ def to_sale(nazwa_sprzedaz='nazwa_sprzedaz', cena_sprzedaz=0, liczba_sprzedaz=0)
         return None
     else:
         laczna_cena = cena_sprzedaz * liczba_sprzedaz
-        produkt_do_sprzedazy = manager.stan_magazynu[nazwa_sprzedaz]['ilość']
+        produkt_do_sprzedazy = manager.stan_magazynu[nazwa_sprzedaz]['ilosc']
         if produkt_do_sprzedazy < liczba_sprzedaz:
             return None
         else:
             produkt_do_sprzedazy -= liczba_sprzedaz
             manager.stan_konta += laczna_cena
-            manager.stan_magazynu[nazwa_sprzedaz]['ilość'] -= liczba_sprzedaz
+            manager.stan_magazynu[nazwa_sprzedaz]['ilosc'] -= liczba_sprzedaz
             akcja = f'Sprzedano {nazwa_sprzedaz} w ilosci {liczba_sprzedaz} za {laczna_cena} $'
             manager.historia_akcji.append(akcja)
 
 
 # funkcja odpowiadajaca za zakup produktow na magazyn
 def to_purchase(nazwa_kupno='nazwa_kupno', cena_kupno=0, ilosc_kupno=0):
-    if nazwa_kupno in manager.stan_magazynu:
-        return
     laczna_cena = cena_kupno * ilosc_kupno
     if laczna_cena > manager.stan_konta:
-        return
+        return None
     elif laczna_cena < manager.stan_konta:
-        manager.stan_magazynu[nazwa_kupno] = {'ilość': ilosc_kupno, 'cena': cena_kupno}
+        manager.stan_magazynu[nazwa_kupno] = {'ilosc': ilosc_kupno, 'cena': cena_kupno}
         manager.stan_konta -= laczna_cena
         akcja = f'Zakupiono {nazwa_kupno} w ilosci {ilosc_kupno} za {laczna_cena} $'
         manager.historia_akcji.append(akcja)
@@ -92,15 +88,17 @@ def show_account_balance():
 
 # funkcja wyswietlajaca liste produktow na magazynie
 def show_list_of_products():
-    products = {k: v for k, v in manager.stan_magazynu.items() if v['ilość'] > 0}
+    products = {k: v for k, v in manager.stan_magazynu.items() if v['ilosc'] > 0}
     products_list = []
     for k, v in products.items():
-        products_list.append(f"{k} (ilość : {v['ilość']}, cena : {v['cena']} )")
+        products_list.append(f"{k} (ilość : {v['ilosc']}, cena : {v['cena']} )")
     return '; '.join(products_list)
 
 
 # funkcja, ktora odpowiada za przeglad historii zmian
 def show_action_history():
-    return manager.historia_akcji
+    return '\n'.join(manager.historia_akcji)
+
+
 
 
