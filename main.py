@@ -12,7 +12,6 @@ class Manager:
         self.stan_konta = 1000
         self.filename = 'history.json'
 
-
 # metoda wczytujaca wartosci do obiektu
     def load_data(self):
         if os.path.exists(self.filename):
@@ -42,7 +41,7 @@ manager.load_data()
 
 
 # funkcja dodajaca i odejmujaca kwote z konta
-def balance_request(number, saldo):
+def balance_request(number=1, saldo=0):
     if number == 1:
         manager.stan_konta += saldo
         akcja = f'Dodano {saldo} $ do konta'
@@ -56,7 +55,7 @@ def balance_request(number, saldo):
 
 
 # funkcja odpowiadajaca za sprzedaz z magazynu
-def to_sale(nazwa_sprzedaz, cena_sprzedaz, liczba_sprzedaz):
+def to_sale(nazwa_sprzedaz='nazwa_sprzedaz', cena_sprzedaz=0, liczba_sprzedaz=0):
     if nazwa_sprzedaz not in manager.stan_magazynu:
         return None
     else:
@@ -73,18 +72,17 @@ def to_sale(nazwa_sprzedaz, cena_sprzedaz, liczba_sprzedaz):
 
 
 # funkcja odpowiadajaca za zakup produktow na magazyn
-def to_purchase(nazwa_kupno, cena_kupno=0, ilosc_kupno=0):
-    if nazwa_kupno not in manager.stan_magazynu:
-        laczna_cena = cena_kupno * ilosc_kupno
-        if laczna_cena > manager.stan_konta:
-            return None
-        elif laczna_cena < manager.stan_konta:
-            manager.stan_magazynu[nazwa_kupno] = {'ilość': ilosc_kupno, 'cena': cena_kupno}
-            manager.stan_konta -= laczna_cena
-            akcja = f'Zakupiono {nazwa_kupno} w ilosci {ilosc_kupno} za {laczna_cena} $'
-            manager.historia_akcji.append(akcja)
-    else:
-        return None
+def to_purchase(nazwa_kupno='nazwa_kupno', cena_kupno=0, ilosc_kupno=0):
+    if nazwa_kupno in manager.stan_magazynu:
+        return
+    laczna_cena = cena_kupno * ilosc_kupno
+    if laczna_cena > manager.stan_konta:
+        return
+    elif laczna_cena < manager.stan_konta:
+        manager.stan_magazynu[nazwa_kupno] = {'ilość': ilosc_kupno, 'cena': cena_kupno}
+        manager.stan_konta -= laczna_cena
+        akcja = f'Zakupiono {nazwa_kupno} w ilosci {ilosc_kupno} za {laczna_cena} $'
+        manager.historia_akcji.append(akcja)
 
 
 # funkcja ktora sprawdza stan konta
@@ -94,24 +92,15 @@ def show_account_balance():
 
 # funkcja wyswietlajaca liste produktow na magazynie
 def show_list_of_products():
-    for k, v in manager.stan_magazynu.items():
-        print(f'{k} : {v}')
+    products = {k: v for k, v in manager.stan_magazynu.items() if v['ilość'] > 0}
+    products_list = []
+    for k, v in products.items():
+        products_list.append(f"{k} (ilość : {v['ilość']}, cena : {v['cena']} )")
+    return '; '.join(products_list)
 
 
 # funkcja, ktora odpowiada za przeglad historii zmian
 def show_action_history():
-    while True:
-        while True:
-            try:
-                liczba_od = int(input('Podaj początek zakresu: '))
-                liczba_do = int(input('Podaj koniec zakresu: '))
-                break
-            except ValueError:
-                print(manager.historia_akcji)
-        if liczba_od <= 0 or liczba_do > len(manager.historia_akcji):
-            print(f'Podałeś liczby spoza zakresu. Oto liczba dotychczasowych akcji : {len(manager.historia_akcji)}')
-        else:
-            print(manager.historia_akcji[liczba_od - 1:liczba_do])
-            break
+    return manager.historia_akcji
 
 
