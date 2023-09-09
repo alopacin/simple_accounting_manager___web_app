@@ -11,20 +11,7 @@ class Manager:
         self.akcja = 0
         self.stan_konta = 1000
         self.filename = 'history.json'
-        self.actions = {}
 
-# metoda-dekorator
-    def assign(self, name):
-        def decorate(cb):
-            self.actions[name] = cb
-        return decorate
-
-# metoda wywolujaca funkcje na podstawie nazwy
-    def execute(self, name):
-        if name not in self.actions:
-            print('Błąd')
-        else:
-            self.actions[name](self)
 
 # metoda wczytujaca wartosci do obiektu
     def load_data(self):
@@ -48,115 +35,71 @@ class Manager:
         with open(self.filename, 'w') as f:
             json.dump(data, f)
 
+
 # utworzenie instacji klasy Manager, wczytanie historii i wartosci z pliku
 manager = Manager()
 manager.load_data()
 
 
 # funkcja dodajaca i odejmujaca kwote z konta
-@manager.assign('saldo')
-def balance_request(manager):
-    while True:
-        try:
-            zapytanie_o_saldo = int(input('Wybierz 1 jeżeli chcesz dodać kwotę. Wybierz 2 jeżeli chcesz odjąć kwotę: '))
-        except ValueError:
-            print('Wpisz 1 lub 2')
-            continue
-        if zapytanie_o_saldo == 1:
-            try:
-                saldo = float(input('Wpisz kwotę: '))
-            except ValueError:
-                print('To nie jest prawidłowa liczba')
-                continue
-            manager.stan_konta += saldo
-            print(f'Dodano {saldo} $ do konta')
-            akcja = f'Dodano {saldo} $ do konta'
-            manager.historia_akcji.append(akcja)
-            break
-        elif zapytanie_o_saldo == 2:
-            try:
-                saldo = float(input('Wpisz kwotę: '))
-            except ValueError:
-                print('To nie jest prawidłowa liczba')
-                continue
-            manager.stan_konta -= saldo
-            print(f'Odjęto {saldo} $ z konta')
-            akcja = f'Odjęto {saldo} $ z konta'
-            manager.historia_akcji.append(akcja)
-            break
-        else:
-            print('Podano nieprawidłową liczbę')
+def balance_request(number, saldo):
+    if number == 1:
+        manager.stan_konta += saldo
+        akcja = f'Dodano {saldo} $ do konta'
+        manager.historia_akcji.append(akcja)
+    elif number == 2:
+        manager.stan_konta -= saldo
+        akcja = f'Odjęto {saldo} $ z konta'
+        manager.historia_akcji.append(akcja)
+    else:
+        return None
 
 
 # funkcja odpowiadajaca za sprzedaz z magazynu
-@manager.assign('sprzedaz')
-def to_sale(manager):
-    nazwa_produktu = input('Podaj jaki produkt ma zostać sprzedany: ')
-    if nazwa_produktu not in manager.stan_magazynu:
-        print('Nie ma takiego produktu w magazynie!')
+def to_sale(nazwa_sprzedaz, cena_sprzedaz, liczba_sprzedaz):
+    if nazwa_sprzedaz not in manager.stan_magazynu:
+        return None
     else:
-        cena_produktu = float(input('Podaj cenę: '))
-        liczba_sztuk = int(input('Podaj ilość: '))
-        laczna_cena = cena_produktu * liczba_sztuk
-        produkt_do_sprzedazy = manager.stan_magazynu[nazwa_produktu]['ilość']
-        if produkt_do_sprzedazy < liczba_sztuk:
-            print('Nie ma takiej ilości!')
+        laczna_cena = cena_sprzedaz * liczba_sprzedaz
+        produkt_do_sprzedazy = manager.stan_magazynu[nazwa_sprzedaz]['ilość']
+        if produkt_do_sprzedazy < liczba_sprzedaz:
+            return None
         else:
-            produkt_do_sprzedazy -= liczba_sztuk
+            produkt_do_sprzedazy -= liczba_sprzedaz
             manager.stan_konta += laczna_cena
-            manager.stan_magazynu[nazwa_produktu]['ilość'] -= liczba_sztuk
-            print(f'Sprzedano {nazwa_produktu} w ilosci {liczba_sztuk} za {laczna_cena} $')
-            akcja = f'Sprzedano {nazwa_produktu} w ilosci {liczba_sztuk} za {laczna_cena} $'
+            manager.stan_magazynu[nazwa_sprzedaz]['ilość'] -= liczba_sprzedaz
+            akcja = f'Sprzedano {nazwa_sprzedaz} w ilosci {liczba_sprzedaz} za {laczna_cena} $'
             manager.historia_akcji.append(akcja)
 
 
 # funkcja odpowiadajaca za zakup produktow na magazyn
-@manager.assign('zakup')
-def to_purchase(manager):
-    nazwa_produktu = input('Podaj jaki produkt ma zostać zakupiony: ')
-    if nazwa_produktu not in manager.stan_magazynu:
-        cena_produktu = float(input('Podaj cenę produktu: '))
-        liczba_sztuk = int(input('Podaj liczbę zakupionych sztuk: '))
-        laczna_cena = cena_produktu * liczba_sztuk
+def to_purchase(nazwa_kupno, cena_kupno=0, ilosc_kupno=0):
+    if nazwa_kupno not in manager.stan_magazynu:
+        laczna_cena = cena_kupno * ilosc_kupno
         if laczna_cena > manager.stan_konta:
-            print('Brakuje pieniędzy na zakup')
+            return None
         elif laczna_cena < manager.stan_konta:
-            manager.stan_magazynu[nazwa_produktu] = {'ilość': liczba_sztuk, 'cena': cena_produktu}
+            manager.stan_magazynu[nazwa_kupno] = {'ilość': ilosc_kupno, 'cena': cena_kupno}
             manager.stan_konta -= laczna_cena
-            print(f'Zakupiono {nazwa_produktu} w ilosci {liczba_sztuk} za {laczna_cena} $')
-            akcja = f'Zakupiono {nazwa_produktu} w ilosci {liczba_sztuk} za {laczna_cena} $'
+            akcja = f'Zakupiono {nazwa_kupno} w ilosci {ilosc_kupno} za {laczna_cena} $'
             manager.historia_akcji.append(akcja)
     else:
-        print('Taki produkt znajduje się już na magazynie')
+        return None
 
 
 # funkcja ktora sprawdza stan konta
-@manager.assign('konto')
-def show_account_balance(manager):
-    print(f'Stan konta to :{manager.stan_konta} $')
+def show_account_balance():
+    return manager.stan_konta
 
 
 # funkcja wyswietlajaca liste produktow na magazynie
-@manager.assign('lista')
-def show_list_of_products(manager):
-    print('Lista produktów w magazynie:')
+def show_list_of_products():
     for k, v in manager.stan_magazynu.items():
         print(f'{k} : {v}')
 
 
-# funkcja, ktora po wywolaniu sprawdza czy i jezeli jest ilosc wpisanego produktu na stanie
-@manager.assign('magazyn')
-def show_product(manager):
-    pytanie = input('Zapas jakiego produktu chcesz zobaczyć?: ')
-    if pytanie not in manager.stan_magazynu:
-        print('Nie ma takiego produktu w magazynie!')
-    else:
-        print(f'{pytanie} : {manager.stan_magazynu.get(pytanie)}')
-
-
 # funkcja, ktora odpowiada za przeglad historii zmian
-@manager.assign('przeglad')
-def show_action_history(manager):
+def show_action_history():
     while True:
         while True:
             try:
