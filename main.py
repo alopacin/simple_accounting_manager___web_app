@@ -91,13 +91,14 @@ def show_list_of_products():
     products = {k: v for k, v in manager.stan_magazynu.items() if v['ilosc'] > 0}
     products_list = []
     for k, v in products.items():
-        products_list.append(f"{k} (ilość : {v['ilosc']}, cena : {v['cena']} )")
-    return '; '.join(products_list)
+        products_list.append(f"{k.upper()} (ilość : {v['ilosc']}, cena : {v['cena']} )")
+    return ' ; '.join(products_list)
 
 
 # funkcja, ktora odpowiada za przeglad historii zmian
 def show_action_history():
-    return '\n'.join(manager.historia_akcji)
+    return '<br> - '.join([''] + manager.historia_akcji)
+
 
 
 
