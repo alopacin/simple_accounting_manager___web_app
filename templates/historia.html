@@ -8,17 +8,20 @@
 </head>
 
 <body>
-<div class="container mt-4 mb-5 text-center">
+
+    <div class="container mt-4 mb-4 text-center">
     <h1>Historia</h1>
         <a href="/" class="btn btn-secondary" >Strona główna</a>
         <a href="/historia" class="btn btn-secondary">Historia</a>
     </div>
 
     <div class="container w-50 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
-        <h2 class="">Historia akcji : </h2>
-        {{ context.history| safe }}
+        <h2 class="container row">Historia akcji : </h2>
+        {% if message %}
+            <p style="color: red"> {{ message }} </p>
+        {% endif %}
+        <p class="container row"> {{ context.history| safe }} </p>
     </div>
-</div>
 
 </body>
 </html>

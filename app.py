@@ -58,3 +58,22 @@ def history():
         'history': show_action_history(),
     }
     return render_template('historia.html', context=context)
+
+
+@app.route("/historia/<int:start>/<int:koniec>")
+def history_range(start, koniec):
+    title = 'Wybrany zakres historii'
+    max_range = len(manager.historia_akcji)
+    selected_history = manager.historia_akcji[start-1:koniec]
+    context = {
+        'title': title,
+        'history': '<br> * '.join([''] + selected_history),
+    }
+    if start < 1 or koniec > max_range or start > koniec:
+        context['history'] = ''
+        message = f"Proszę wybrać zakres od 1 do {max_range}."
+        return render_template('historia.html', context=context, message=message)
+    return render_template('historia.html', context=context)
+
+
+

@@ -12,14 +12,14 @@
       <h2>Stan konta : {{ context.show_balance }}</h2>
       </div>
     <div class="container text-center mb-3">
-        <h1>Magazyn</h1>
+        <h1>Strona główna</h1>
         <a href="/" class="btn btn-secondary" >Strona główna</a>
         <a href="/historia" class="btn btn-secondary">Historia</a>
     </div>
 
-    <div class="container text-center mt-3 row-cols-2">
-        <div class="container col-sm-6 mt-5 mb-3 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
-            <h4>Zakup: </h4>
+    <div class="container text-center mt-2 row-cols-2">
+        <div class="container col-sm-6 mt-4 mb-3 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
+            <h4 class="container row">Zakup : </h4>
             <form action="/" method="POST">
                 <input class="w-100" type="text" placeholder="Wpisz produkt" name="nazwa_kupno">
                 <input class="w-100" type="number" placeholder="Podaj cenę kupna" name="cena_kupno" >
@@ -28,8 +28,8 @@
             </form>
         </div>
 
-        <div class="container col-sm-6 mt-3 mb-3 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
-            <h4>Sprzedaż:</h4>
+        <div class="container col-sm-6 mt-2 mb-3 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
+            <h4 class="container row">Sprzedaż :</h4>
             <form action="/" method="POST">
                 <input class="w-100" type="text" placeholder="Wpisz produkt" name="nazwa_sprzedaz">
                 <input class="w-100" type="number" placeholder="Podaj cenę sprzedaży" name="cena_sprzedaz">
@@ -39,10 +39,9 @@
         </div>
 
       <div class="container text-center mt-3 mb-3 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
-        <h4>Zmiana salda: </h4>
+        <h4 class=" container row">Zmiana salda : </h4>
           <form action="/" method="POST">
-             <label class="input-group-text" for="inputGroupSelect"></label>
-            <select class="form-select w-100" name="operacja" id="inputGroupSelect">
+            <select class="form-select w-100 border border-dark-subtle" name="operacja" id="inputGroupSelect">
                 <option value="" selected>Wybierz</option>
                 <option value="1">Dodaj do konta</option>
                 <option value="2">Odejmij z konta</option>
@@ -52,7 +51,7 @@
           </form>
       </div>
           <div class="container w-75 p-3 mt-3 mb-3 p-3 --bs-dark-text-emphasis bg-dark-subtle border border-primary-subtle rounded-3">
-    <h3>Stan magazynu : </h3>
+    <h3 class="container row">Stan magazynu : </h3>
       <p>{{ context.list }} </p>
     </div>
 

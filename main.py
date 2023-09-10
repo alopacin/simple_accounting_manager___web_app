@@ -83,7 +83,7 @@ def to_purchase(nazwa_kupno='nazwa_kupno', cena_kupno=0, ilosc_kupno=0):
 
 # funkcja ktora sprawdza stan konta
 def show_account_balance():
-    return manager.stan_konta
+    return f'{manager.stan_konta} $'
 
 
 # funkcja wyswietlajaca liste produktow na magazynie
@@ -97,7 +97,7 @@ def show_list_of_products():
 
 # funkcja, ktora odpowiada za przeglad historii zmian
 def show_action_history():
-    return '<br> - '.join([''] + manager.historia_akcji)
+    return '<br> * '.join([''] + manager.historia_akcji)
 
 
 
